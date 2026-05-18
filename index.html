@@ -1,31 +1,83 @@
 <!DOCTYPE html>
 <html lang="fr" data-theme="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Healthy Companion</title>
     <meta name="description" content="Application simple et saine pour le suivi du poids et des repas.">
-    
+
     <!-- Google Fonts: Inter pour une typographie moderne, lisible et apaisante -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    
+
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
     <header class="app-header">
         <div class="logo">
             <h1>Healthy Companion</h1>
         </div>
-        <button id="theme-toggle" class="btn-icon" aria-label="Changer de thème">
-            <!-- Icône lune/soleil gérée via CSS/JS -->
-            <svg id="icon-sun" class="icon hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
-            <svg id="icon-moon" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
-        </button>
+
+        <nav class="main-nav hidden" id="main-nav">
+            <button class="nav-btn active" data-target="dashboard-screen">Dashboard</button>
+            <button class="nav-btn" data-target="ingredients-screen">Ingrédients</button>
+            <button class="nav-btn" data-target="recipes-screen">Recettes</button>
+        </nav>
+
+        <div class="header-actions">
+            <button id="logout-btn" class="btn btn-primary hidden"
+                style="padding: 0.4rem 1rem; font-size: 0.85rem;">Déconnexion</button>
+            <button id="theme-toggle" class="btn-icon" aria-label="Changer de thème">
+                <!-- Icône lune/soleil gérée via CSS/JS -->
+                <svg id="icon-sun" class="icon hidden" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="5"></circle>
+                    <line x1="12" y1="1" x2="12" y2="3"></line>
+                    <line x1="12" y1="21" x2="12" y2="23"></line>
+                    <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                    <line x1="1" y1="12" x2="3" y2="12"></line>
+                    <line x1="21" y1="12" x2="23" y2="12"></line>
+                    <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                <svg id="icon-moon" class="icon" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
+                    viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                    stroke-linejoin="round">
+                    <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+            </button>
+        </div>
     </header>
 
-    <main class="dashboard container">
+    <!-- ÉCRAN D'AUTHENTIFICATION -->
+    <main id="auth-screen" class="container auth-container hidden">
+        <div class="card auth-card">
+            <h2 id="auth-title">Connexion</h2>
+            <form id="auth-form">
+                <div class="form-group">
+                    <label for="auth-email">Email</label>
+                    <input type="email" id="auth-email" required placeholder="votre@email.com">
+                </div>
+                <div class="form-group">
+                    <label for="auth-password">Mot de passe</label>
+                    <input type="password" id="auth-password" required placeholder="••••••••">
+                </div>
+                <p id="auth-error" class="error-msg hidden"></p>
+                <button type="submit" id="auth-submit-btn" class="btn btn-primary">Se connecter</button>
+            </form>
+            <p class="auth-switch">
+                <span id="auth-switch-text">Pas encore de compte ?</span>
+                <button type="button" id="auth-switch-btn" class="btn-link">S'inscrire</button>
+            </p>
+        </div>
+    </main>
+
+    <main id="dashboard-screen" class="dashboard container hidden">
         <section class="dashboard-header">
             <h2>Aujourd'hui</h2>
             <p class="subtitle">Voici un résumé de votre journée.</p>
@@ -76,6 +128,182 @@
         </div>
     </main>
 
+    <!-- ÉCRAN RECETTES -->
+    <main id="recipes-screen" class="dashboard container hidden">
+        <section class="dashboard-header flex-between" style="align-items: center;">
+            <div>
+                <h2>Vos Recettes</h2>
+                <p class="subtitle" style="margin-bottom: 0;">Gérez vos plats et leurs calories.</p>
+            </div>
+            <button id="open-recipe-modal-btn" class="btn btn-primary btn-circle" title="Nouvelle Recette"
+                aria-label="Nouvelle Recette">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+        </section>
+
+        <div class="recipes-toolbar">
+            <input type="text" id="recipe-search" placeholder="Rechercher une recette..." class="form-input">
+            <select id="recipe-filter" class="form-input">
+                <option value="all">Toutes les catégories</option>
+                <option value="plat">Plat principal</option>
+                <option value="dessert">Dessert</option>
+                <option value="snack">Snack / Collation</option>
+                <option value="fastfood">Cheat Meal / Fast Food</option>
+            </select>
+        </div>
+
+        <div id="recipes-grid" class="list-layout recipes-grid">
+            <!-- Les recettes seront générées ici en JS -->
+        </div>
+    </main>
+
+    <!-- MODAL CRÉATION/MODIFICATION RECETTE -->
+    <dialog id="recipe-modal" class="modal">
+        <div class="modal-content card" style="padding: 2.5rem; border-radius: 1.25rem;">
+            <div class="modal-header" style="margin-bottom: 2rem;">
+                <h3 id="recipe-modal-title" style="font-size: 1.5rem; margin: 0;">Nouvelle Recette</h3>
+                <button id="close-recipe-modal-btn" class="btn-icon" aria-label="Fermer"
+                    style="margin-right: -0.5rem; margin-top: -0.5rem;">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <form id="recipe-form">
+                <div class="form-group" style="margin-bottom: 1.5rem;">
+                    <label for="recipe-name"
+                        style="font-weight: 500; font-size: 0.95rem; margin-bottom: 0.5rem; display: block;">Nom de la
+                        recette</label>
+                    <input type="text" id="recipe-name" class="form-input" required placeholder="ex: Pâtes Bolognaise">
+                </div>
+
+                <div class="form-row" style="margin-bottom: 2rem; align-items: flex-end;">
+                    <div class="form-group half" style="margin-bottom: 0;">
+                        <label for="recipe-category"
+                            style="font-weight: 500; font-size: 0.95rem; margin-bottom: 0.5rem; display: block;">Catégorie</label>
+                        <select id="recipe-category" class="form-input" required>
+                            <option value="plat">Plat principal</option>
+                            <option value="dessert">Dessert</option>
+                            <option value="snack">Snack</option>
+                            <option value="fastfood">Fast Food</option>
+                        </select>
+                    </div>
+                    <div class="form-group half"
+                        style="margin-bottom: 0; padding-bottom: 0.5rem; display: flex; align-items: center; justify-content: flex-end; gap: 0.75rem;">
+                        <span style="font-weight: 500; font-size: 0.95rem; color: var(--text-primary);">Cheat Meal
+                            ?</span>
+                        <label class="switch">
+                            <input type="checkbox" id="recipe-is-cheat">
+                            <span class="slider round"></span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="ingredients-section"
+                    style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-bottom: 2rem;">
+                    <div style="margin-bottom: 1rem;">
+                        <h4 style="font-size: 1.1rem; margin: 0; font-weight: 600; color: var(--text-primary);">
+                            Ingrédients</h4>
+                    </div>
+                    <div id="ingredients-list" style="display: flex; flex-direction: column; gap: 0.75rem;">
+                        <!-- Lignes d'ingrédients générées dynamiquement -->
+                    </div>
+                    <div style="display: flex; justify-content: center; margin-top: 1rem;">
+                        <button type="button" id="add-ingredient-btn" class="btn btn-primary btn-circle"
+                            title="Ajouter un ingrédient">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
+                                fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"
+                                stroke-linejoin="round">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="recipe-total-calories flex-between"
+                    style="border-top: 1px solid var(--border-color); padding-top: 1.5rem; margin-bottom: 2rem;">
+                    <span style="font-size: 1.1rem; font-weight: 500; color: var(--text-primary);">Total estimé</span>
+                    <strong id="recipe-total-display" style="font-size: 1.75rem; color: var(--accent-primary);">0
+                        kcal</strong>
+                </div>
+
+                <div class="modal-actions" style="display: flex; gap: 1rem;">
+                    <button type="button" id="cancel-recipe-btn" class="btn"
+                        style="flex: 1; background: var(--surface-hover); border: none;">Annuler</button>
+                    <button type="submit" class="btn btn-primary" style="flex: 2;">Enregistrer la recette</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- ÉCRAN INGRÉDIENTS -->
+    <main id="ingredients-screen" class="dashboard container hidden">
+        <section class="dashboard-header flex-between" style="align-items: center;">
+            <div>
+                <h2>Vos Ingrédients</h2>
+                <p class="subtitle" style="margin-bottom: 0;">Créez votre base de données d'ingrédients (calories pour
+                    100g/unité).</p>
+            </div>
+            <button id="open-ingredient-modal-btn" class="btn btn-primary btn-circle" title="Nouvel Ingrédient"
+                aria-label="Nouvel Ingrédient">
+                <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="5" x2="12" y2="19"></line>
+                    <line x1="5" y1="12" x2="19" y2="12"></line>
+                </svg>
+            </button>
+        </section>
+
+        <div id="ingredients-grid" class="list-layout recipes-grid">
+            <!-- Les ingrédients seront générés ici en JS -->
+        </div>
+    </main>
+
+    <!-- MODAL INGRÉDIENT -->
+    <dialog id="ingredient-modal" class="modal">
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h3 id="ingredient-modal-title">Nouvel Ingrédient</h3>
+                <button id="close-ingredient-modal-btn" class="btn-icon" aria-label="Fermer">&times;</button>
+            </div>
+            <form id="ingredient-form">
+                <div class="form-group">
+                    <label for="ing-form-name">Nom de l'ingrédient</label>
+                    <input type="text" id="ing-form-name" class="form-input" required placeholder="ex: Pâtes sèches">
+                </div>
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="ing-form-cals">Calories (pour 100g ou 1 unité)</label>
+                        <input type="number" id="ing-form-cals" class="form-input" required min="0"
+                            placeholder="ex: 350">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-ingredient-btn" class="btn">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
+    <!-- Firebase Compat SDKs (pour fonctionner en local sans serveur web) -->
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-firestore-compat.js"></script>
+
+    <!-- Nos scripts locaux -->
+    <script src="firebase.js"></script>
+    <script src="auth.js"></script>
+    <script src="ingredients.js"></script>
+    <script src="recipes.js"></script>
     <script src="app.js"></script>
 </body>
+
 </html>
