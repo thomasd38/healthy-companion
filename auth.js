@@ -11,6 +11,20 @@ const logoutBtn = document.getElementById('logout-btn');
 
 let isLoginMode = true;
 
+function hideAppScreens() {
+    document.querySelectorAll('main.dashboard').forEach(screen => {
+        screen.classList.add('hidden');
+    });
+}
+
+function showDashboardScreen() {
+    hideAppScreens();
+    dashboardScreen.classList.remove('hidden');
+    document.querySelectorAll('.nav-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.getAttribute('data-target') === 'dashboard-screen');
+    });
+}
+
 // Basculer entre Connexion et Inscription
 authSwitchBtn.addEventListener('click', () => {
     isLoginMode = !isLoginMode;
@@ -79,7 +93,7 @@ auth.onAuthStateChanged(async (user) => {
     if (user) {
         // Utilisateur connecté
         authScreen.classList.add('hidden');
-        dashboardScreen.classList.remove('hidden');
+        showDashboardScreen();
         if (logoutBtn) logoutBtn.classList.remove('hidden');
         
         const mainNav = document.getElementById('main-nav');
@@ -105,7 +119,7 @@ auth.onAuthStateChanged(async (user) => {
     } else {
         // Utilisateur déconnecté
         authScreen.classList.remove('hidden');
-        dashboardScreen.classList.add('hidden');
+        hideAppScreens();
         if (logoutBtn) logoutBtn.classList.add('hidden');
         
         const mainNav = document.getElementById('main-nav');
