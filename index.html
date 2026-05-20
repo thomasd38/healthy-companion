@@ -11,6 +11,9 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Chart.js pour le graphique de poids -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
     <link rel="stylesheet" href="style.css">
 </head>
@@ -25,6 +28,7 @@
             <button class="nav-btn active" data-target="dashboard-screen">Dashboard</button>
             <button class="nav-btn" data-target="calendar-screen">Calendrier</button>
             <button class="nav-btn" data-target="journal-screen">Journal</button>
+            <button class="nav-btn" data-target="weight-screen">Poids</button>
             <button class="nav-btn" data-target="ingredients-screen">Ingrédients</button>
             <button class="nav-btn" data-target="recipes-screen">Recettes</button>
         </nav>
@@ -103,7 +107,7 @@
             </article>
 
             <!-- Widget Poids -->
-            <article class="card widget">
+            <article class="card widget widget-weight">
                 <div class="card-header">
                     <h3>Poids Actuel</h3>
                 </div>
@@ -155,6 +159,70 @@
             <div id="calendar-grid" style="display: grid; grid-template-columns: repeat(7, 1fr); grid-template-rows: repeat(6, 1fr); gap: 0.5rem; flex: 1;">
                 <!-- Jours générés en JS -->
             </div>
+        </div>
+    </main>
+
+    <!-- ÉCRAN SUIVI DU POIDS -->
+    <main id="weight-screen" class="dashboard container hidden">
+        <section class="dashboard-header flex-between" style="align-items: center;">
+            <div>
+                <h2>Suivi du Poids</h2>
+                <p class="subtitle" style="margin-bottom: 0;">Visualisez votre progression vers votre objectif.</p>
+            </div>
+            <button id="open-weight-modal-btn" class="btn btn-primary" style="display: flex; align-items: center; gap: 0.5rem;">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"></line><line x1="5" y1="12" x2="19" y2="12"></line></svg>
+                Pesée
+            </button>
+        </section>
+
+        <!-- Statistiques rapides -->
+        <div class="grid-layout" style="margin-bottom: 2rem;">
+            <article class="card widget">
+                <div class="card-body">
+                    <h3 style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500;">Poids Actuel</h3>
+                    <div class="metric" style="margin-bottom: 0;">
+                        <span class="value" id="current-weight-display">--</span>
+                    </div>
+                </div>
+            </article>
+            <article class="card widget">
+                <div class="card-body">
+                    <h3 style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500;">Évolution Totale</h3>
+                    <div class="metric" style="margin-bottom: 0;">
+                        <span class="value" id="diff-weight-display" style="font-size: 1.5rem;">--</span>
+                    </div>
+                </div>
+            </article>
+            <article class="card widget">
+                <div class="card-body">
+                    <h3 style="font-size: 0.95rem; color: var(--text-secondary); margin-bottom: 0.5rem; font-weight: 500;">Meilleur Poids</h3>
+                    <div class="metric" style="margin-bottom: 0;">
+                        <span class="value" id="best-weight-display" style="font-size: 1.5rem;">--</span>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <div class="grid-layout">
+            <!-- Graphique -->
+            <article class="card" style="grid-column: 1 / span 2; padding: 1.5rem;">
+                <div class="card-header" style="margin-bottom: 1rem;">
+                    <h3>Évolution de votre poids</h3>
+                </div>
+                <div style="position: relative; height: 350px; width: 100%;">
+                    <canvas id="weight-chart"></canvas>
+                </div>
+            </article>
+
+            <!-- Historique -->
+            <article class="card" style="grid-column: 3 / span 1; padding: 1.5rem; max-height: 450px; display: flex; flex-direction: column;">
+                <div class="card-header" style="margin-bottom: 1rem; flex-shrink: 0;">
+                    <h3>Historique</h3>
+                </div>
+                <div id="weight-history-list" style="overflow-y: auto; flex: 1; padding-right: 0.5rem;">
+                    <p class="muted">En attente de données.</p>
+                </div>
+            </article>
         </div>
     </main>
 
@@ -484,6 +552,32 @@
         </div>
     </dialog>
 
+    <!-- MODAL POIDS -->
+    <dialog id="weight-modal" class="modal">
+        <div class="modal-content card">
+            <div class="modal-header">
+                <h3>Ajouter une pesée</h3>
+                <button id="close-weight-modal-btn" class="btn-icon" aria-label="Fermer">&times;</button>
+            </div>
+            <form id="weight-form">
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="weight-date">Date</label>
+                        <input type="date" id="weight-date" class="form-input" required>
+                    </div>
+                    <div class="form-group half">
+                        <label for="weight-value">Poids (kg)</label>
+                        <input type="number" id="weight-value" class="form-input" step="0.1" required min="1" placeholder="ex: 75.5">
+                    </div>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" id="cancel-weight-btn" class="btn">Annuler</button>
+                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                </div>
+            </form>
+        </div>
+    </dialog>
+
     <!-- Firebase Compat SDKs (pour fonctionner en local sans serveur web) -->
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/10.11.0/firebase-auth-compat.js"></script>
@@ -496,6 +590,7 @@
     <script src="recipes.js"></script>
     <script src="journal.js"></script>
     <script src="calendar.js"></script>
+    <script src="weight.js"></script>
     <script src="app.js"></script>
 </body>
 

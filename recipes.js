@@ -4,6 +4,7 @@ const screens = {
     'dashboard-screen': document.getElementById('dashboard-screen'),
     'calendar-screen': document.getElementById('calendar-screen'),
     'journal-screen': document.getElementById('journal-screen'),
+    'weight-screen': document.getElementById('weight-screen'),
     'recipes-screen': document.getElementById('recipes-screen'),
     'ingredients-screen': document.getElementById('ingredients-screen')
 };
