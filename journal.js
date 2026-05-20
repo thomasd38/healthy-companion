@@ -18,16 +18,12 @@ const ingredientQty = document.getElementById('journal-ingredient-qty');
 const customGroup = document.getElementById('journal-custom-group');
 const customName = document.getElementById('journal-custom-name');
 const customCals = document.getElementById('journal-custom-cals');
-const mealTimeSelect = document.getElementById('journal-meal-time');
 
 const step1 = document.getElementById('journal-step-1');
 const step2 = document.getElementById('journal-step-2');
-const step3 = document.getElementById('journal-step-3');
 const prev2Btn = document.getElementById('journal-prev-2');
-const prev3Btn = document.getElementById('journal-prev-3');
 const dot1 = document.getElementById('dot-step-1');
 const dot2 = document.getElementById('dot-step-2');
-const dot3 = document.getElementById('dot-step-3');
 
 const journalEntriesList = document.getElementById('journal-entries-list');
 const journalTotalCalsDisplay = document.getElementById('journal-total-cals');
@@ -136,11 +132,9 @@ if(entryTypeSelect) {
 function showStep(step) {
     if(step1) step1.style.display = step === 1 ? 'block' : 'none';
     if(step2) step2.style.display = step === 2 ? 'block' : 'none';
-    if(step3) step3.style.display = step === 3 ? 'block' : 'none';
 
     if(dot1) dot1.style.background = step >= 1 ? 'var(--accent-primary)' : 'var(--surface-hover)';
     if(dot2) dot2.style.background = step >= 2 ? 'var(--accent-primary)' : 'var(--surface-hover)';
-    if(dot3) dot3.style.background = step >= 3 ? 'var(--accent-primary)' : 'var(--surface-hover)';
 }
 
 document.querySelectorAll('.selection-card').forEach(card => {
@@ -154,20 +148,16 @@ document.querySelectorAll('.selection-card').forEach(card => {
         card.classList.add('selected');
 
         if (step === '1') {
-            if(mealTimeSelect) mealTimeSelect.value = value;
-            setTimeout(() => showStep(2), 200); // léger délai pour l'effet visuel
-        } else if (step === '2') {
             if(entryTypeSelect) {
                 entryTypeSelect.value = value;
                 entryTypeSelect.dispatchEvent(new Event('change'));
             }
-            setTimeout(() => showStep(3), 200);
+            setTimeout(() => showStep(2), 200);
         }
     });
 });
 
 if(prev2Btn) prev2Btn.addEventListener('click', () => showStep(1));
-if(prev3Btn) prev3Btn.addEventListener('click', () => showStep(2));
 
 function renderRecipeIngredientsForJournal() {
     if(!journalRecipeIngredients) return;
@@ -256,7 +246,6 @@ function openJournalModal() {
     }
 
     journalForm.reset();
-    if(mealTimeSelect) mealTimeSelect.value = '';
     if(entryTypeSelect) entryTypeSelect.value = '';
     document.querySelectorAll('.selection-card').forEach(c => c.classList.remove('selected'));
     
@@ -284,7 +273,6 @@ if(journalForm) {
 
         const dateStr = journalDateInput.value;
         const type = entryTypeSelect.value;
-        const mealTime = mealTimeSelect.value;
         
         let name = "";
         let calories = 0;
@@ -330,7 +318,6 @@ if(journalForm) {
             type,
             name,
             calories,
-            mealTime,
             createdAt: new Date().toISOString()
         };
         
@@ -392,12 +379,6 @@ function updateJournalUI() {
         currentEntries.forEach(entry => {
             totalCals += entry.calories;
             
-            let timeLabel = entry.mealTime;
-            if(timeLabel === 'petit-dejeuner') timeLabel = 'Petit-déjeuner';
-            else if(timeLabel === 'dejeuner') timeLabel = 'Déjeuner';
-            else if(timeLabel === 'diner') timeLabel = 'Dîner';
-            else if(timeLabel === 'collation') timeLabel = 'Collation';
-
             const card = document.createElement('div');
             card.className = 'card';
             card.style.display = 'flex';
@@ -408,7 +389,6 @@ function updateJournalUI() {
             card.innerHTML = `
                 <div>
                     <strong style="display: block; font-size: 1.05rem; margin-bottom: 0.25rem;">${entry.name}</strong>
-                    <span class="recipe-badge">${timeLabel}</span>
                 </div>
                 <div style="display: flex; align-items: center; gap: 1rem;">
                     <div style="text-align: right;">
