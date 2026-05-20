@@ -591,3 +591,85 @@ input:checked + .slider:before {
     align-items: center;
     flex-shrink: 0;
 }
+
+/* =========================================
+   SELECTION CARDS
+   ========================================= */
+.selection-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+    background-color: var(--surface-hover);
+    border: 2px solid transparent;
+    border-radius: var(--radius-md);
+    color: var(--text-primary);
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: center;
+    font-family: inherit;
+    font-size: 1rem;
+    width: 100%;
+}
+
+.selection-card:hover {
+    background-color: var(--border-color);
+    transform: translateY(-2px);
+}
+
+.selection-card.selected {
+    border-color: var(--accent-primary);
+    background-color: rgba(59, 130, 246, 0.1);
+}
+
+/* =========================================
+   CALENDAR
+   ========================================= */
+.calendar-cell {
+    background-color: var(--surface-hover);
+    border-radius: var(--radius-md);
+    padding: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 2px solid transparent;
+}
+
+.calendar-cell:hover {
+    background-color: var(--border-color);
+    transform: translateY(-2px);
+}
+
+.calendar-cell.empty {
+    background-color: transparent;
+    cursor: default;
+}
+
+.calendar-cell.empty:hover {
+    transform: none;
+    background-color: transparent;
+}
+
+.calendar-date {
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+}
+
+.calendar-cals {
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+}
+
+.calendar-indicator {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    margin-top: 0.25rem;
+}
+.calendar-indicator.good { background-color: #22c55e; } /* green */
+.calendar-indicator.bad { background-color: #ef4444; }  /* red */

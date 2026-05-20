@@ -2,6 +2,8 @@
 const navBtns = document.querySelectorAll('.nav-btn');
 const screens = {
     'dashboard-screen': document.getElementById('dashboard-screen'),
+    'calendar-screen': document.getElementById('calendar-screen'),
+    'journal-screen': document.getElementById('journal-screen'),
     'recipes-screen': document.getElementById('recipes-screen'),
     'ingredients-screen': document.getElementById('ingredients-screen')
 };
@@ -40,6 +42,7 @@ const recipesGrid = document.getElementById('recipes-grid');
 
 let currentUserId = null;
 let editingRecipeId = null;
+window.userRecipes = [];
 
 auth.onAuthStateChanged((user) => {
     if (user) {
@@ -47,6 +50,7 @@ auth.onAuthStateChanged((user) => {
         loadRecipes();
     } else {
         currentUserId = null;
+        window.userRecipes = [];
         if(recipesGrid) recipesGrid.innerHTML = ''; 
     }
 });
@@ -241,13 +245,18 @@ async function loadRecipes() {
 
         if (snapshot.empty) {
             if(recipesGrid) recipesGrid.innerHTML = `<p class="muted" style="grid-column: 1/-1;">Aucune recette pour le moment. Créez-en une !</p>`;
+            window.dispatchEvent(new Event('recipesLoaded'));
             return;
         }
 
+        window.userRecipes = [];
         snapshot.forEach(doc => {
             const recipe = doc.data();
+            recipe.id = doc.id;
+            window.userRecipes.push(recipe);
             renderRecipeCard(doc.id, recipe);
         });
+        window.dispatchEvent(new Event('recipesLoaded'));
 
     } catch (error) {
         console.error("Erreur lors de la récupération des recettes:", error);
